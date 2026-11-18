@@ -172,19 +172,34 @@ void draw() {
     minutes: 1.25,
     html: () => `
       <div class="slide">
-        <div class="kicker">demo · processing real</div>
-        <h2>T3chFest 2019 <span class="c-magenta">→</span> ${CONFIG.event}</h2>
-        <div class="panel">${codeBlock(`
-AudioIn input = new AudioIn(this, 0);
-Amplitude loudness = new Amplitude(this);
-loudness.input(input);
+        <div class="split">
+          <div class="stack">
+            <div class="kicker">demo · processing real</div>
+            <h2>T3chFest 2019 <span class="c-magenta">→</span><br>${CONFIG.event}</h2>
+            <p>El volum del micro<br>controla la mida del logo.</p>
+            <p class="c-yellow pixel" style="font-size:clamp(14px,1.6vw,28px)">⌘ + TAB → PROCESSING → ⌘ + R</p>
+          </div>
+          <div class="panel compact">${codeBlock(`
+import processing.sound.*;
+
+Amplitude loudness;
+PShape logo;
+
+void setup() {
+  size(1280, 720);
+  logo = loadShape("logo.svg");
+  AudioIn mic = new AudioIn(this, 0);
+  mic.start();
+  loudness = new Amplitude(this);
+  loudness.input(mic);
+}
 
 void draw() {
-  float volume = loudness.analyze();
-  float size = map(volume, 0, 0.5, 1, 350);
-  shape(logo, x, y, size * ratio, size);
+  background(0);
+  float w = map(loudness.analyze(), 0, 0.5, 40, width);
+  shape(logo, (width - w) / 2, (height - w / 5) / 2, w, w / 5);
 }`)}</div>
-        <p class="c-yellow pixel" style="font-size:clamp(14px,1.6vw,28px)">⌘ + TAB → PROCESSING → ⌘ + R</p>
+        </div>
       </div>`,
     notes: `- Fa uns anys vaig fer aquesta demo a T3chFest amb Processing.
 - Canvia a Processing (Cmd+Tab), obre processing/GirotronicaClap i prem Cmd+R.

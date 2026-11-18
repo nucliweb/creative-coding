@@ -301,3 +301,4 @@ body.blackout #blackout { display: block; }
 #settings label { display: block; margin: 10px 0 4px; color: var(--cyan); }
 #settings select, #settings input[type='range'] { width: 100%; font: inherit; background: #000; color: var(--fg); border: 1px solid var(--dim); }
 #settings .keys { margin-top: 14px; color: var(--dim); font-size: 18px; line-height: 1.3; }
+.panel.compact pre.code { font-size: clamp(12px, 1.25vw, 24px); }
