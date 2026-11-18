@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#020604">
+  <title>Control · Creative Coding</title>
+</head>
+<body class="control">
+  <header>
+    <img src="/logo-girotronica.svg" alt="La Girotrònica">
+    <span id="conn" class="dot"></span>
+  </header>
+  <nav id="tabs">
+    <button data-mode="rings">ANELLS</button>
+    <button data-mode="messages">MISSATGE</button>
+    <button data-mode="particles">EIXAM</button>
+  </nav>
+  <main>
+    <section data-view="idle">
+      <p class="pixel big">MIRA LA PANTALLA</p>
+      <p class="muted">Aquesta pàgina canviarà sola quan comenci la següent demo.</p>
+    </section>
+    <section data-view="rings"><div id="sliders"></div></section>
+    <section data-view="messages">
+      <form id="msg-form" autocomplete="off">
+        <label for="msg">Envia una paraula a la pantalla</label>
+        <input id="msg" maxlength="20" placeholder="HOLA MÓN" enterkeyhint="send">
+        <button type="submit" class="primary">ENVIA ▶</button>
+        <p id="msg-status" class="muted"></p>
+      </form>
+    </section>
+    <section data-view="particles">
+      <p class="muted">Arrossega el dit: mous el teu eixam.</p>
+      <div id="pad"><span id="me"></span></div>
+    </section>
+  </main>
+  <script type="module" src="/src/control/main.js"></script>
+</body>
+</html>

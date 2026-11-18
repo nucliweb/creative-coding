@@ -1,0 +1,18 @@
+body.presenter { overflow: auto; height: auto; min-height: 100%; font-size: 26px; padding: 16px 24px; }
+.presenter header { display: flex; align-items: center; gap: 28px; border-bottom: 2px solid var(--dim); padding-bottom: 12px; flex-wrap: wrap; }
+.presenter #timer { font-size: 56px; color: var(--yellow); }
+.presenter #delta { font-size: 28px; }
+.presenter #clock { font-size: 34px; color: var(--dim); }
+.presenter .btns { margin-left: auto; display: flex; gap: 8px; }
+.presenter button { font-family: var(--font-pixel); font-size: 14px; background: #000; color: var(--green); border: 2px solid var(--green); padding: 12px 16px; cursor: pointer; }
+.presenter button:hover { background: var(--green); color: #000; }
+.presenter main { display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; margin-top: 18px; }
+.presenter h2 { font-size: 30px; margin: 10px 0 18px; }
+.presenter h3 { font-size: 16px; margin-bottom: 10px; }
+.presenter #notes { white-space: pre-wrap; font-size: 34px; line-height: 1.2; }
+.presenter aside { display: flex; flex-direction: column; gap: 16px; }
+.presenter #status { line-height: 1.5; font-size: 24px; }
+.presenter #list { list-style: none; max-height: 40vh; overflow: auto; font-size: 22px; }
+.presenter #list li { cursor: pointer; padding: 2px 6px; }
+.presenter #list li.on { background: var(--green); color: #000; }
+.presenter #list li.on .muted { color: #000; }

@@ -1,0 +1,42 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "stage": {
+      ".read": true,
+      ".write": true,
+      ".validate": "newData.isString() && newData.val().matches(/^(idle|rings|messages|particles|finale)$/)"
+    },
+    "rings": {
+      ".read": true,
+      "speed": { ".write": true, ".validate": "newData.isNumber() && newData.val() >= -300 && newData.val() <= 300" },
+      "size": { ".write": true, ".validate": "newData.isNumber() && newData.val() >= 0.4 && newData.val() <= 2.5" },
+      "hue": { ".write": true, ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 360" },
+      "thickness": { ".write": true, ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 24" },
+      "chaos": { ".write": true, ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1" },
+      "count": { ".write": true, ".validate": "newData.isNumber() && newData.val() >= 3 && newData.val() <= 48" }
+    },
+    "players": {
+      ".read": true,
+      "$pid": {
+        ".write": "$pid.length <= 24",
+        ".validate": "newData.hasChildren(['x', 'y', 'h'])",
+        "x": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1" },
+        "y": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1" },
+        "h": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 360" },
+        "$other": { ".validate": false }
+      }
+    },
+    "messages": {
+      ".read": true,
+      ".indexOn": ["t"],
+      "$mid": {
+        ".write": "!data.exists()",
+        ".validate": "newData.hasChildren(['text', 't'])",
+        "text": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 20" },
+        "t": { ".validate": "newData.val() === now" },
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}

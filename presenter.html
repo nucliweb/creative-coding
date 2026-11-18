@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Presentador · Creative Coding</title>
+</head>
+<body class="presenter">
+  <header>
+    <div id="timer" class="pixel">00:00</div>
+    <div id="delta" class="pixel"></div>
+    <div id="clock"></div>
+    <div class="btns">
+      <button id="b-prev">◀</button><button id="b-next">▶</button>
+      <button id="b-timer">INICIA</button><button id="b-reset">RESET</button>
+    </div>
+  </header>
+  <main>
+    <section class="now">
+      <div id="pos" class="kicker"></div>
+      <h2 id="title"></h2>
+      <div id="notes"></div>
+    </section>
+    <aside>
+      <div class="panel cyan"><div class="panel-title">SEGÜENT</div><h3 id="next-title"></h3><div id="next-notes" class="muted"></div></div>
+      <div class="panel"><div class="panel-title">ESTAT</div><div id="status"></div></div>
+      <ol id="list"></ol>
+    </aside>
+  </main>
+  <script type="module" src="/src/deck/presenter.js"></script>
+</body>
+</html>
