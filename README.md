@@ -36,7 +36,7 @@ Override the QR target with `?control=https://example.com/control.html` (useful 
 | `M` | mute / unmute sound effects (crashes, win, boom), remembered between sessions; on the camera demos `m` mirrors, use `Shift+M` there |
 | hold `Q` | simulated microphone (plan B for the applause) |
 
-Per-demo keys are listed in each slide's presenter notes (for example `1`–`7` toggle shader effects, `g` shows the local control panel on the rings demo, `w` drops a test word on the messages demo, and on the arena finale `Tab` pauses the game and shows the full crash ranking, `b` toggles bots, `p` switches to pixel mode and `c` orbits the camera). In the presenter view `T`, `<`, `>` and `M` control the deck, and `I` starts or pauses the timer.
+Per-demo keys are listed in each slide's presenter notes (for example `1`–`7` toggle shader effects, `g` shows the local control panel on the rings demo, `w` drops a test word on the messages demo, and on the arena finale `Tab` pauses the game and shows the full crash ranking, `b` toggles bots, `p` switches to pixel mode and `c` orbits the camera). The presenter view forwards every key except navigation and `I` (which starts or pauses the timer) to the deck, so demo keys such as `g`, `x`, `r` or `Tab` work from there too.
 
 ## Resources
 

@@ -113,9 +113,8 @@ channel.onmessage = ({ data }) => {
   if (data.type === 'nav') navigate(data.action, data.index);
   if (data.type === 'hello') broadcast();
   if (data.type === 'timer') { timerStart = data.timerStart; broadcast(); }
-  if (data.type === 'theme') toggleTheme();
-  if (data.type === 'text') scaleText(data.direction);
-  if (data.type === 'mute') mute();
+  if (data.type === 'key') onKeydown(remoteEvent(data));
+  if (data.type === 'keyup') onKeyup(remoteEvent(data));
 };
 
 const players = new Map();
@@ -144,7 +143,8 @@ function navigate(action, index) {
 const NEXT = ['ArrowRight', 'ArrowDown', 'PageDown', ' '];
 const PREV = ['ArrowLeft', 'ArrowUp', 'PageUp'];
 
-addEventListener('keydown', (e) => {
+// The same handler serves the deck keyboard and keys forwarded from the presenter view.
+function onKeydown(e) {
   if (!booted || e.target.closest?.('input, select, textarea')) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (!e.shiftKey && current.demo?.onKey?.(e)) { e.preventDefault(); return; } // demos first: a combo may claim t
@@ -164,8 +164,12 @@ addEventListener('keydown', (e) => {
   if (e.key === 'q') { media.fakeMic = true; return; }
   if (e.key === '+' || e.key === '=' || e.key === ']') { media.setSensitivity(media.sensitivity * 1.25); toast(`SENSIBILITAT MIC ${media.sensitivity.toFixed(1)}`); return; }
   if (e.key === '-' || e.key === '[') { media.setSensitivity(media.sensitivity / 1.25); toast(`SENSIBILITAT MIC ${media.sensitivity.toFixed(1)}`); return; }
-});
-addEventListener('keyup', (e) => { if (e.key === 'q' || e.key === 'Q') media.fakeMic = false; });
+}
+function onKeyup(e) { if (e.key === 'q' || e.key === 'Q') media.fakeMic = false; }
+addEventListener('keydown', onKeydown);
+addEventListener('keyup', onKeyup);
+// A key pressed in the presenter view, replayed here as if it had been pressed on the deck.
+const remoteEvent = ({ key, shiftKey }) => ({ key, shiftKey: !!shiftKey, metaKey: false, ctrlKey: false, altKey: false, target: document.body, preventDefault() {} });
 addEventListener('hashchange', () => { const s = parseHash(SLIDES, location.hash); if (s.index !== state.index || s.step !== state.step) show(s); });
 
 function mute() { toast(toggleMute() ? 'SO SILENCIAT' : 'SO ACTIU'); }

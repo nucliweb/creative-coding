@@ -3,6 +3,7 @@ import '@fontsource/vt323';
 import '../styles/theme.css';
 import './presenter.css';
 import { SLIDES } from './slides.js';
+import { remoteKey } from '../shared/remoteKeys.js';
 
 const $ = (s) => document.querySelector(s);
 const ch = new BroadcastChannel('cc-deck');
@@ -23,11 +24,10 @@ addEventListener('keydown', (e) => {
   if (['ArrowRight', 'PageDown', ' ', 'ArrowDown'].includes(e.key)) { e.preventDefault(); ch.postMessage({ type: 'nav', action: 'next' }); }
   if (['ArrowLeft', 'PageUp', 'ArrowUp'].includes(e.key)) { e.preventDefault(); ch.postMessage({ type: 'nav', action: 'prev' }); }
   if (e.key === 'i') toggleTimer();
-  if (e.key === 't' || e.key === 'T') ch.postMessage({ type: 'theme' });
-  if (e.key === '>') ch.postMessage({ type: 'text', direction: 1 });
-  if (e.key === '<') ch.postMessage({ type: 'text', direction: -1 });
-  if (e.key === 'm' || e.key === 'M') ch.postMessage({ type: 'mute' });
+  const fwd = remoteKey(e); // every other key drives the deck: demo keys, theme, text size, mute…
+  if (fwd) { if (e.key === 'Tab') e.preventDefault(); ch.postMessage({ type: 'key', ...fwd }); }
 });
+addEventListener('keyup', (e) => { const fwd = remoteKey(e); if (fwd) ch.postMessage({ type: 'keyup', ...fwd }); });
 
 function toggleTimer() {
   if (timerStart === null) timerStart = Date.now();
