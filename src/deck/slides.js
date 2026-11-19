@@ -244,6 +244,31 @@ void draw() {
 Tecles: r reinicia · w forçar victòria · +/- sensibilitat micro · mantén Q = micro simulat`,
   },
   {
+    id: 'p5-editor',
+    title: "L'editor de p5.js",
+    minutes: 0.5,
+    stage: 'rings',
+    html: () => `
+      <div class="slide">
+        <div class="kicker">03 · p5.js · l'editor</div>
+        <div class="screen-split">
+          <figure class="screen">
+            <img src="screens/p5-editor.webp" alt="Editor web de p5.js amb un sketch en marxa" onerror="this.closest('figure').classList.add('missing')">
+            <figcaption>EDITOR.P5JS.ORG</figcaption>
+          </figure>
+          <ul class="stack bullets">
+            <li>▸ Res a instal·lar: <span class="c-cyan">editor.p5js.org</span></li>
+            <li>▸ Codi a l'esquerra, resultat a la dreta</li>
+            <li>▸ Comparteix el sketch amb una URL</li>
+            <li>▸ Milers de sketches a la comunitat</li>
+          </ul>
+        </div>
+      </div>`,
+    notes: `- Obriu editor.p5js.org al portàtil (o al mòbil!) i ja esteu programant.
+- Aquest codi és el mateix cercle de Processing, però al navegador.
+- A la següent hi ha el QR: traieu el mòbil, les demos que venen les controleu vosaltres.`,
+  },
+  {
     id: 'p5',
     title: 'p5.js + QR',
     minutes: 0.5,
@@ -273,31 +298,6 @@ function draw() {
     notes: `- Mateixa filosofia que Processing, però JavaScript i una URL. Cap instal·lació.
 - Una comunitat que posa l'accessibilitat i la inclusió al centre.
 - Que escanegin el QR ara: les demos següents les controlen ells.`,
-  },
-  {
-    id: 'p5-editor',
-    title: "L'editor de p5.js",
-    minutes: 0.5,
-    stage: 'rings',
-    html: () => `
-      <div class="slide">
-        <div class="kicker">03 · p5.js · l'editor</div>
-        <div class="screen-split">
-          <figure class="screen">
-            <img src="screens/p5-editor.webp" alt="Editor web de p5.js amb un sketch en marxa" onerror="this.closest('figure').classList.add('missing')">
-            <figcaption>EDITOR.P5JS.ORG</figcaption>
-          </figure>
-          <ul class="stack bullets">
-            <li>▸ Res a instal·lar: <span class="c-cyan">editor.p5js.org</span></li>
-            <li>▸ Codi a l'esquerra, resultat a la dreta</li>
-            <li>▸ Comparteix el sketch amb una URL</li>
-            <li>▸ Milers de sketches a la comunitat</li>
-          </ul>
-        </div>
-      </div>`,
-    notes: `- Obriu editor.p5js.org al portàtil (o al mòbil!) i ja esteu programant.
-- Aquest codi és el mateix cercle de Processing, però al navegador.
-- Si teniu el mòbil a mà, el QR anterior us deixa a punt per a la demo següent.`,
   },
   {
     id: 'anells',
@@ -350,7 +350,7 @@ Tecles: w envia una paraula de prova (pla B)`,
   {
     id: 'glitch',
     title: 'Shader glitch (càmera)',
-    minutes: 1.5,
+    minutes: 1.25,
     bg: false,
     html: () => `<div class="slide">${full}</div>`,
     demo: () => import('../demos/glitchCam.js'),
@@ -417,7 +417,7 @@ Tecles: Tab pausa + rànquing · b bots · p mode píxel · c càmera orbital ·
   {
     id: 'alternatives',
     title: 'I molt més (alternatives)',
-    minutes: 0.75,
+    minutes: 0.5,
     stage: 'idle',
     html: () => `
       <div class="slide">
@@ -437,6 +437,34 @@ Tecles: Tab pausa + rànquing · b bots · p mode píxel · c càmera orbital ·
 - Nodes (TouchDesigner, vvvv, Max) sense escriure codi: molt usats en espectacles i museus.
 - També es programa música en directe: Sonic Pi, TidalCycles...
 - Tot surt de la llista awesome-creative-coding, que és als recursos.`,
+  },
+  {
+    id: 'ia',
+    title: "Creative Coding en temps d'IA",
+    minutes: 0.5,
+    stage: 'idle',
+    html: () => `
+      <div class="slide">
+        <div class="kicker">i ara · ia</div>
+        <h2>Creative Coding en temps d'IA</h2>
+        <div class="screen-split">
+          <figure class="screen" style="--ar: 2576 / 1617; --h: 58vh">
+            <img src="screens/claude-sketchbook.webp" alt="Claude crea un Creative Coding Sketchbook a partir d'una sola frase" onerror="this.closest('figure').classList.add('missing')">
+            <figcaption>CLAUDE</figcaption>
+          </figure>
+          <div class="stack">
+            <p class="panel prompt"><span class="c-green">&gt;</span> Crea un aplicatiu amb exemples de Creative Coding</p>
+            <ul class="stack bullets">
+              <li>▸ Una frase: <span class="c-cyan">8 sketches</span> que funcionen</li>
+              <li>▸ Flow field, Game of Life, fractals, flocking…</li>
+              <li>▸ Tu tries què provar i què canviar</li>
+            </ul>
+          </div>
+        </div>
+      </div>`,
+    notes: `- Aquesta app l'ha feta Claude a partir d'una sola frase: vuit sketches clàssics, cadascun amb els seus paràmetres.
+- Mireu el procés a l'esquerra: prova cada sketch, troba errors (la Reaction-Diffusion donava NaN) i els arregla.
+- L'IA us estalvia la part feixuga; el criteri és vostre: què és bonic, què sorprèn, què voleu explicar.`,
   },
   {
     id: 'gracies',

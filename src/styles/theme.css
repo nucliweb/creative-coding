@@ -390,9 +390,10 @@ body.blackout #blackout { display: block; }
 /* ---------- screenshot slides ---------- */
 
 .screen-split { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 3vw; align-items: center; flex: 1 1 auto; min-height: 0; }
-.screen { position: relative; margin: 0; justify-self: start; width: min(100%, calc(68vh * var(--ar, 16 / 9))); border: 2px solid var(--green); box-shadow: 0 0 calc(24px * var(--glow)) rgb(0 255 106 / calc(0.3 * var(--glow))), 0 10px 30px rgb(0 0 0 / 0.25); } /* as big as the column allows without passing 68vh tall; --ar = the screenshot's width / height */
+.screen { position: relative; margin: 0; justify-self: start; width: min(100%, calc(var(--h, 68vh) * var(--ar, 16 / 9))); border: 2px solid var(--green); box-shadow: 0 0 calc(24px * var(--glow)) rgb(0 255 106 / calc(0.3 * var(--glow))), 0 10px 30px rgb(0 0 0 / 0.25); } /* as big as the column allows without passing --h tall (68vh by default); --ar = the screenshot's width / height */
 .screen img { display: block; width: 100%; height: auto; }
 .screen figcaption { position: absolute; left: -2px; bottom: -2px; transform: translateY(100%); font-family: var(--font-pixel); font-size: calc(var(--fs) * clamp(10px, 1vw, 18px)); background: var(--green); color: var(--bg); padding: 0.4em 0.7em; }
+.prompt { margin: 0 0 1.4em; padding: 0.9em 1.1em; font-family: var(--font-code); font-size: calc(var(--fs) * clamp(14px, 1.5vw, 26px)); line-height: 1.4; }
 .screen.missing { width: 100%; aspect-ratio: 16 / 9; background: var(--panel); display: grid; place-items: center; }
 .screen.missing img { display: none; }
 .screen.missing figcaption { position: static; transform: none; }
