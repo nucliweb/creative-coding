@@ -1,4 +1,4 @@
-import { CONFIG } from '../config.js';
+import { CONFIG, RESOURCES } from '../config.js';
 import { codeBlock } from '../fx/highlight.js';
 import { INTRO_SHADER } from '../demos/shaderIntro.js';
 
@@ -65,7 +65,7 @@ Tecles: m mirall · +/- resolució · c contrast`,
     html: () => `
       <div class="slide">
         <div class="kicker">01 · orígens</div>
-        <h2>Abans que existís la paraula</h2>
+        <h2>Abans de la paraula</h2>
         <ul class="timeline">
           <li data-step="1"><span class="year">1965</span><span>Primeres exposicions d'art per ordinador: <b class="c-cyan">Georg Nees</b> (Stuttgart) i <b class="c-cyan">A. Michael Noll</b> (Nova York)</span></li>
           <li data-step="1"><span class="year">1968</span><span><b class="c-magenta">Cybernetic Serendipity</b>, ICA de Londres</span></li>
@@ -106,7 +106,7 @@ for (let j = 0; j < 22; j++) {
   }
 }`)}</div>
           </div>
-          <div class="live-canvas" style="aspect-ratio:12/20;height:80vh;width:auto;justify-self:center"></div>
+          <div class="live-canvas" style="aspect-ratio:12/20;width:min(100%, 48vh);justify-self:center"></div>
         </div>
       </div>`,
     demo: () => import('../demos/schotter.js'),
@@ -128,7 +128,7 @@ for (let j = 0; j < 22; j++) {
             <p>Ordre rigorós<br>+ una mica d'atzar<br>= <span class="c-yellow">vida</span></p>
             <p class="muted">1924 – 2023</p>
           </div>
-          <div class="live-canvas" style="aspect-ratio:1;height:78vh;width:auto;justify-self:center"></div>
+          <div class="live-canvas" style="aspect-ratio:1;width:min(100%, 78vh);justify-self:center"></div>
         </div>
       </div>`,
     demo: () => import('../demos/molnar.js'),
@@ -146,7 +146,7 @@ for (let j = 0; j < 22; j++) {
         <div class="split">
           <div class="stack">
             <div class="kicker">02 · processing</div>
-            <h1 style="font-size:clamp(28px,4.6vw,88px)">PROCESSING</h1>
+            <h1 style="font-size:calc(var(--fs) * clamp(28px,4.6vw,88px))">PROCESSING</h1>
             <p>2001 · Casey Reas i Ben Fry<br><span class="muted">MIT Media Lab</span></p>
             <div class="panel">${codeBlock(`
 void setup() {
@@ -177,7 +177,7 @@ void draw() {
             <div class="kicker">demo · processing real</div>
             <h2>T3chFest 2019 <span class="c-magenta">→</span><br>${CONFIG.event}</h2>
             <p>El volum del micro<br>controla la mida del logo.</p>
-            <p class="c-yellow pixel" style="font-size:clamp(14px,1.6vw,28px)">⌘ + TAB → PROCESSING → ⌘ + R</p>
+            <p class="c-yellow pixel" style="font-size:calc(var(--fs) * clamp(14px,1.6vw,28px))">⌘ + TAB → PROCESSING → ⌘ + R</p>
           </div>
           <div class="panel compact">${codeBlock(`
 import processing.sound.*;
@@ -228,7 +228,7 @@ Tecles: r reinicia · w forçar victòria · +/- sensibilitat micro · mantén Q
         <div class="split">
           <div class="stack">
             <div class="kicker">03 · p5.js</div>
-            <h1 style="font-size:clamp(28px,4.6vw,88px)">P5.JS</h1>
+            <h1 style="font-size:calc(var(--fs) * clamp(28px,4.6vw,88px))">P5.JS</h1>
             <p>Processing, al navegador.<br><span class="muted">2014 · Lauren Lee McCarthy</span></p>
             <div class="panel">${codeBlock(`
 function setup() {
@@ -240,7 +240,7 @@ function draw() {
 }`)}</div>
           </div>
           <div class="stack" style="align-items:center">
-            <p class="pixel c-yellow" style="font-size:clamp(14px,1.8vw,32px)">TRAIEU EL MÒBIL</p>
+            <p class="pixel c-yellow" style="font-size:calc(var(--fs) * clamp(14px,1.8vw,32px))">TRAIEU EL MÒBIL</p>
             <div data-qr="big"></div>
           </div>
         </div>
@@ -272,7 +272,7 @@ Tecles: g panell local (pla B) · r reinicia valors`,
     demo: () => import('../demos/messages.js'),
     notes: `- Envieu una paraula des del mòbil (màxim 20 caràcters, amb filtre).
 - Cada lletra cau com a pluja digital i es fixa al seu lloc.
-Tecles: t envia una paraula de prova (pla B)`,
+Tecles: w envia una paraula de prova (pla B)`,
   },
   {
     id: 'shaders',
@@ -281,14 +281,14 @@ Tecles: t envia una paraula de prova (pla B)`,
     stage: 'idle',
     html: () => `
       <div class="slide">
+        <div class="kicker">04 · shaders</div>
+        <h2>Un programa per a <span class="c-magenta">cada píxel</span>. Tots alhora.</h2>
         <div class="split">
           <div class="stack">
-            <div class="kicker">04 · shaders</div>
-            <h2>Un programa per a <span class="c-magenta">cada píxel</span>.<br>Tots alhora.</h2>
             <div class="panel magenta">${codeBlock(INTRO_SHADER)}</div>
-            <p class="muted" style="font-size:clamp(16px,1.6vw,30px)">1920 × 1080 × 60 fps = <span class="c-yellow">124 milions</span> d'execucions per segon</p>
+            <p class="muted" style="font-size:calc(var(--fs) * clamp(16px,1.6vw,30px))">1920 × 1080 × 60 fps = <span class="c-yellow">124 milions</span> d'execucions per segon</p>
           </div>
-          <div class="live-canvas panel magenta" style="padding:0"></div>
+          <div class="live-canvas panel magenta keep-colors" style="padding:0"></div>
         </div>
       </div>`,
     demo: () => import('../demos/shaderIntro.js'),
@@ -327,7 +327,7 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   p.pos += p.vel;
   particles[id.x] = p;
 }`)}</div>
-        <p class="pixel c-yellow" style="font-size:clamp(14px,1.6vw,28px)">1.000.000 PARTÍCULES · 60 FPS · AL NAVEGADOR</p>
+        <p class="pixel c-yellow" style="font-size:calc(var(--fs) * clamp(14px,1.6vw,28px))">1.000.000 PARTÍCULES · 60 FPS · AL NAVEGADOR</p>
       </div>`,
     notes: `- WebGL només sabia pintar. WebGPU porta els compute shaders: càlcul general a la GPU.
 - Cada partícula és un fil d'execució: un milió de fils, cada frame.
@@ -356,7 +356,7 @@ Tecles: s remolí · f estela`,
     demo: () => import('../demos/finale.js'),
     notes: `- Tot a la vegada: càmera amb shader, partícules WebGPU, els vostres mòbils, les vostres paraules i el micro.
 - Demana: moveu els eixams, envieu paraules i, per acabar, el MÉS FORT possible.
-Tecles: l logo · p paleta · d datamosh · t paraula de prova`,
+Tecles: l logo · p paleta · d datamosh · w paraula de prova`,
   },
   {
     id: 'gracies',
@@ -368,23 +368,18 @@ Tecles: l logo · p paleta · d datamosh · t paraula de prova`,
         <div class="split">
           <div class="stack">
             <h2 class="glitch" data-text="ARA US TOCA">ARA US TOCA</h2>
-            <ul class="stack" style="list-style:none;font-size:clamp(18px,2vw,38px)">
-              <li>▸ processing.org · p5js.org</li>
-              <li>▸ openprocessing.org</li>
-              <li>▸ thebookofshaders.com</li>
-              <li>▸ shadertoy.com</li>
-              <li>▸ The Coding Train <span class="muted">(YouTube)</span></li>
-              <li>▸ Genuary <span class="muted">· un sketch cada dia de gener</span></li>
+            <ul class="stack resources">
+              ${RESOURCES.map((r) => `<li>▸ <a href="${r.url}" target="_blank" rel="noopener">${r.name}</a> <span class="muted">· ${r.note}</span></li>`).join('')}
             </ul>
             <p class="byline">GRÀCIES! · ${CONFIG.speaker} · ${CONFIG.handle}</p>
           </div>
           <div class="stack" style="align-items:center">
-            <p class="pixel c-yellow" style="font-size:clamp(12px,1.4vw,24px)">CODI DE LA XERRADA</p>
-            <div data-qr="repo"></div>
+            <p class="pixel c-yellow" style="font-size:calc(var(--fs) * clamp(13px,1.6vw,30px))">CODI I RECURSOS</p>
+            <div data-qr="repo" data-qr-label="github.com/nucliweb/creative-coding"></div>
           </div>
         </div>
       </div>`,
-    notes: `- Tot el que heu vist és al repo: slides, demos i sketch de Processing.
+    notes: `- Tot el que heu vist és al repo (slides, demos i sketch de Processing) i el QR porta directament als recursos.
 - Repte: Genuary al gener. Un sketch al dia.
 - Gràcies!`,
   },

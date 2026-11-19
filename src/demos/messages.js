@@ -106,7 +106,7 @@ export default async function mount(host, { fb, controlUrl }) {
 
   return {
     onKey(e) {
-      if (e.key === 't') { layer.add(TEST_WORDS[(Math.random() * TEST_WORDS.length) | 0]); return true; }
+      if (e.key === 'w') { layer.add(TEST_WORDS[(Math.random() * TEST_WORDS.length) | 0]); return true; }
       return false;
     },
     destroy() { cancelAnimationFrame(raf); unsub(); layer.destroy(); },

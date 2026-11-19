@@ -22,6 +22,9 @@ export function highlight(code) {
   return out.join('');
 }
 
+// --cols lets CSS shrink the font so the longest line always fits its panel, whatever the screen or text scale.
 export function codeBlock(code) {
-  return `<pre class="code">${highlight(code.replace(/^\n/, '').replace(/\s+$/, ''))}</pre>`;
+  const src = code.replace(/^\n/, '').replace(/\s+$/, '');
+  const cols = Math.max(...src.split('\n').map((l) => l.length));
+  return `<pre class="code" style="--cols:${cols}">${highlight(src)}</pre>`;
 }

@@ -30,10 +30,24 @@ Override the QR target with `?control=https://example.com/control.html` (useful 
 | `Shift+S` | settings: camera, microphone, mic sensitivity and live meter |
 | `Shift+C` | toggle CRT scanlines |
 | `B` or `.` | black screen |
+| `T` | light / dark theme (text slides; full-screen demos stay dark) |
+| `<` / `>` | smaller / bigger text, remembered between sessions |
 | `+` / `-` | mic sensitivity |
 | hold `Q` | simulated microphone (plan B for the applause) |
 
-Per-demo keys are listed in each slide's presenter notes (for example `1`–`7` toggle shader effects, `g` shows the local control panel on the rings demo, `t` drops a test word on the messages demo).
+Per-demo keys are listed in each slide's presenter notes (for example `1`–`7` toggle shader effects, `g` shows the local control panel on the rings demo, `w` drops a test word on the messages demo). In the presenter view `T`, `<` and `>` control the deck, and `I` starts or pauses the timer.
+
+## Resources
+
+The links from the closing slide, to keep exploring after the talk:
+
+- [Processing](https://processing.org): the original creative coding environment (Java, 2001), with tutorials and reference.
+- [p5.js](https://p5js.org): Processing for the browser, with an online editor and an inclusive community.
+- [OpenProcessing](https://openprocessing.org): thousands of sketches to read, fork and remix.
+- [The Book of Shaders](https://thebookofshaders.com): a gentle, step by step introduction to fragment shaders.
+- [Shadertoy](https://www.shadertoy.com): a social network of shaders; every piece shows its code.
+- [The Coding Train](https://thecodingtrain.com): Daniel Shiffman's videos and coding challenges.
+- [Genuary](https://genuary.art): one generative sketch per day every January, with a prompt for each day.
 
 ## Firebase
 

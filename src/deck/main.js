@@ -10,6 +10,7 @@ import { drawQR } from '../fx/qr.js';
 import { media, hasWebGPU } from '../input/media.js';
 import * as fb from '../net/firebase.js';
 import { CONFIG, controlUrl } from '../config.js';
+import { nextTheme, stepTextScale } from '../shared/display.js';
 
 const $ = (s) => document.querySelector(s);
 const deck = $('#deck'), stageEl = $('#stage');
@@ -19,6 +20,27 @@ const ctx = { media, fb, config: CONFIG, controlUrl: controlUrl(), toast };
 let state = parseHash(SLIDES, location.hash);
 let current = { index: -1, demo: null, token: 0 };
 let booted = false;
+
+// ---------------------------------------------------------------- display prefs (T theme, < > text size)
+const prefs = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } },
+};
+let theme = prefs.get('cc.theme', 'dark');
+let textScale = stepTextScale(prefs.get('cc.fs', 1), 0);
+function applyDisplay() {
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.style.setProperty('--fs', String(textScale));
+}
+applyDisplay();
+function toggleTheme() {
+  theme = nextTheme(theme); prefs.set('cc.theme', theme); applyDisplay();
+  toast(theme === 'light' ? 'TEMA CLAR' : 'TEMA FOSC');
+}
+function scaleText(direction) {
+  textScale = stepTextScale(textScale, direction); prefs.set('cc.fs', textScale); applyDisplay();
+  toast(`TEXT ${Math.round(textScale * 100)}%`);
+}
 
 // ---------------------------------------------------------------- background rain
 const rain = new MatrixRain($('#bg-rain'), { fontSize: 18, fade: 0.09 });
@@ -43,18 +65,19 @@ async function show(nextState, { transition = true } = {}) {
     current.index = state.index;
     stageEl.innerHTML = slide.html();
     stageEl.querySelectorAll('[data-qr]').forEach((el) => {
-      const url = el.dataset.qr === 'repo' ? CONFIG.repoUrl : ctx.controlUrl;
+      const url = el.dataset.qr === 'repo' ? CONFIG.resourcesUrl : ctx.controlUrl;
       el.className = 'qr-box';
       const c = document.createElement('canvas');
       drawQR(c, url, { size: Math.round(innerHeight * (el.dataset.qr === 'repo' ? 0.42 : 0.5)) });
       const u = document.createElement('div');
-      u.className = 'url'; u.textContent = url.replace(/^https?:\/\//, '');
+      u.className = 'url'; u.textContent = el.dataset.qrLabel || url.replace(/^https?:\/\//, '');
       el.append(c, u);
     });
     stageEl.classList.add('glitch-in');
     setTimeout(() => stageEl.classList.remove('glitch-in'), 300);
 
     const bg = slide.bg !== false;
+    stageEl.classList.toggle('force-dark', !bg);
     deck.classList.toggle('no-bg', !bg);
     bg ? rain.start() : rain.stop();
     if (slide.stage) fb.setStage(slide.stage);
@@ -90,6 +113,8 @@ channel.onmessage = ({ data }) => {
   if (data.type === 'nav') navigate(data.action, data.index);
   if (data.type === 'hello') broadcast();
   if (data.type === 'timer') { timerStart = data.timerStart; broadcast(); }
+  if (data.type === 'theme') toggleTheme();
+  if (data.type === 'text') scaleText(data.direction);
 };
 
 const players = new Map();
@@ -121,6 +146,9 @@ const PREV = ['ArrowLeft', 'ArrowUp', 'PageUp'];
 addEventListener('keydown', (e) => {
   if (!booted || e.target.closest?.('input, select, textarea')) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === 't' || e.key === 'T') { toggleTheme(); return; }
+  if (e.key === '>') { scaleText(1); return; }
+  if (e.key === '<') { scaleText(-1); return; }
   if (!e.shiftKey && current.demo?.onKey?.(e)) { e.preventDefault(); return; }
   if (NEXT.includes(e.key)) { e.preventDefault(); navigate('next'); return; }
   if (PREV.includes(e.key)) { e.preventDefault(); navigate('prev'); return; }
@@ -166,7 +194,7 @@ async function toggleSettings() {
       <label>Sensibilitat micro: <span id="sens-v">${media.sensitivity.toFixed(1)}</span></label>
       <input id="set-sens" type="range" min="0.5" max="20" step="0.1" value="${media.sensitivity}">
       <label>Nivell</label><div id="set-meter" class="c-green">░</div>
-      <div class="keys">→ ← PageDown/Up: navegar · Shift+P: presentador · Shift+F: pantalla completa · Shift+C: CRT · B o . : pantalla negra · mantén Q: micro simulat · +/-: sensibilitat</div>`;
+      <div class="keys">→ ← PageDown/Up: navegar · Shift+P: presentador · Shift+F: pantalla completa · Shift+C: CRT · B o . : pantalla negra · T: tema clar/fosc · &lt; &gt;: mida del text · mantén Q: micro simulat · +/-: sensibilitat</div>`;
     el.querySelector('#set-cam').onchange = (e) => media.startVideo(e.target.value);
     el.querySelector('#set-mic').onchange = (e) => media.startAudio(e.target.value);
     el.querySelector('#set-sens').oninput = (e) => { media.setSensitivity(Number(e.target.value)); el.querySelector('#sens-v').textContent = media.sensitivity.toFixed(1); };

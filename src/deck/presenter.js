@@ -22,7 +22,10 @@ $('#b-reset').onclick = () => { timerStart = null; pausedAt = null; sendTimer();
 addEventListener('keydown', (e) => {
   if (['ArrowRight', 'PageDown', ' ', 'ArrowDown'].includes(e.key)) { e.preventDefault(); ch.postMessage({ type: 'nav', action: 'next' }); }
   if (['ArrowLeft', 'PageUp', 'ArrowUp'].includes(e.key)) { e.preventDefault(); ch.postMessage({ type: 'nav', action: 'prev' }); }
-  if (e.key === 't') toggleTimer();
+  if (e.key === 'i') toggleTimer();
+  if (e.key === 't' || e.key === 'T') ch.postMessage({ type: 'theme' });
+  if (e.key === '>') ch.postMessage({ type: 'text', direction: 1 });
+  if (e.key === '<') ch.postMessage({ type: 'text', direction: -1 });
 });
 
 function toggleTimer() {

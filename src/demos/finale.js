@@ -64,7 +64,7 @@ export default async function mount(host, { media, fb, controlUrl }) {
       if (e.key === 'l') { showLogo = !showLogo; return true; }
       if (e.key === 'p') { pal = !pal; cam.fx.uPal = pal ? 1 : 0; return true; }
       if (e.key === 'd') { cam.toggle('uMosh'); return true; }
-      if (e.key === 't') { words.add('TOT JUNT'); return true; }
+      if (e.key === 'w') { words.add('TOT JUNT'); return true; }
       return false;
     },
     destroy() {
