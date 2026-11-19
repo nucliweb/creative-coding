@@ -2,7 +2,7 @@
 import { MatrixRain, randomGlyph } from '../fx/matrixRain.js';
 import { qrBox } from '../fx/qr.js';
 
-const TEST_WORDS = ['HOLA MÓN', 'GIROTRÒNICA', 'WAKE UP NEO', 'HELLO WORLD', 'CREATIVE CODING', 'P5.JS', 'SHADERS', 'BON DIA'];
+const TEST_WORDS = ['HOLA MÓN', 'GIROTRÒNICA', 'WAKE UP NEO', 'HELLO WORLD', 'CREATIVE CODING', 'P5.JS', 'SHADERS', 'BON DIA', 'SIX SEVEN'];
 
 export class MessageLayer {
   constructor(canvas, { rain = true, onText } = {}) {

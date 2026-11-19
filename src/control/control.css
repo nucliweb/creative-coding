@@ -13,9 +13,9 @@ body.control {
 .control header img { height: 28px; filter: drop-shadow(0 0 6px rgb(0 255 106 / 0.7)); }
 .control .dot { width: 14px; height: 14px; background: var(--red); box-shadow: 0 0 8px var(--red); }
 .control .dot.on { background: var(--green); box-shadow: 0 0 8px var(--green); }
-.control nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 14px 0; }
+.control nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 14px 0; }
 .control nav button, .control button.primary {
-  font-family: var(--font-pixel); font-size: 11px; padding: 14px 4px; background: #000; color: var(--green);
+  font-family: var(--font-pixel); font-size: 10px; padding: 14px 4px; background: #000; color: var(--green);
   border: 2px solid var(--dim); cursor: pointer;
 }
 .control nav button.on { border-color: var(--green); background: var(--green); color: #000; }
@@ -34,11 +34,47 @@ body.control {
 }
 .control button.primary { width: 100%; margin-top: 12px; font-size: 14px; padding: 18px; border-color: var(--green); background: var(--green); color: #000; }
 .control button.primary:disabled { opacity: 0.4; }
+.control .swarm-hint { display: flex; align-items: center; gap: 10px; }
+.control .swarm-hint i { flex: none; width: 22px; height: 22px; border-radius: 50%; background: hsl(var(--me, 150) 100% 60%); box-shadow: 0 0 12px hsl(var(--me, 150) 100% 60%); }
 .control #pad {
+  --c: hsl(var(--me, 150) 100% 60%);
   position: relative; width: 100%; aspect-ratio: 16 / 10; margin-top: 10px; touch-action: none;
-  border: 2px solid var(--green);
+  border: 2px solid var(--c); box-shadow: 0 0 18px hsl(var(--me, 150) 100% 50% / 0.5);
   background:
-    linear-gradient(rgb(0 255 106 / 0.12) 1px, transparent 1px) 0 0 / 10% 10%,
-    linear-gradient(90deg, rgb(0 255 106 / 0.12) 1px, transparent 1px) 0 0 / 10% 10%, #000;
+    linear-gradient(hsl(var(--me, 150) 100% 60% / 0.14) 1px, transparent 1px) 0 0 / 10% 10%,
+    linear-gradient(90deg, hsl(var(--me, 150) 100% 60% / 0.14) 1px, transparent 1px) 0 0 / 10% 10%,
+    radial-gradient(circle at center, hsl(var(--me, 150) 100% 40% / 0.25), #000 75%);
 }
-.control #me { position: absolute; width: 36px; height: 36px; margin: -18px 0 0 -18px; border: 3px solid; border-radius: 50%; left: 50%; top: 50%; pointer-events: none; }
+.control #me { position: absolute; width: 36px; height: 36px; margin: -18px 0 0 -18px; border: 3px solid var(--c); border-radius: 50%; left: 50%; top: 50%; pointer-events: none; background: hsl(var(--me, 150) 100% 60% / 0.35); box-shadow: 0 0 14px var(--c); }
+
+/* ---------- arena ---------- */
+.control #arena-name {
+  width: 100%; font-family: var(--font-pixel); font-size: 16px; padding: 14px 12px; background: #000; color: var(--green);
+  border: 2px solid var(--green); text-transform: uppercase; outline: none;
+}
+.control #swatches { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin: 12px 0 14px; }
+.control #swatches button { aspect-ratio: 1; border: 2px solid #000; outline: 2px solid transparent; cursor: pointer; }
+.control #swatches button.on { outline-color: #fff; }
+.control .arena-score { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 14px; }
+.control .arena-score[hidden] { display: none; }
+.control .arena-score > div { border: 2px solid var(--magenta); padding: 10px 12px; background: rgb(255 43 214 / 0.08); text-align: center; }
+.control .arena-score span { display: block; font-family: var(--font-pixel); font-size: 9px; color: var(--magenta); margin-bottom: 8px; }
+.control .arena-score b { font-family: var(--font-pixel); font-size: 30px; color: #fff; display: inline-block; }
+.control .arena-score small { font-family: var(--font-pixel); font-size: 11px; color: #9ab; margin-left: 4px; }
+.control .arena-score b.bump { animation: score-bump 0.45s ease-out; }
+.control .arena-score b.lead { color: var(--yellow); text-shadow: 0 0 12px var(--yellow); }
+@keyframes score-bump { 0% { transform: scale(1.6); color: var(--magenta); } 100% { transform: scale(1); } }
+.control .arena-controls { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; }
+.control #stick {
+  position: relative; width: 100%; aspect-ratio: 1; max-width: 260px; border-radius: 50%; touch-action: none;
+  border: 2px solid var(--green); background: radial-gradient(circle, rgb(0 255 106 / 0.12), #000 70%);
+}
+.control #knob {
+  position: absolute; left: 50%; top: 50%; width: 34%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%);
+  background: var(--green); box-shadow: 0 0 18px var(--green); pointer-events: none;
+}
+.control #dash {
+  width: 96px; height: 96px; border-radius: 50%; font-family: var(--font-pixel); font-size: 13px; cursor: pointer;
+  background: var(--magenta); color: #000; border: 3px solid #fff; box-shadow: 0 0 18px var(--magenta); touch-action: manipulation;
+}
+.control #dash:active { transform: scale(0.92); }

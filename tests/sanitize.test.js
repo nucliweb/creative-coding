@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { sanitizeMessage, isBlocked } from '../src/shared/sanitize.js';
+import { sanitizeMessage, isBlocked, sanitizeName } from '../src/shared/sanitize.js';
 
 describe('sanitizeMessage', () => {
   it('trims, collapses spaces and uppercases', () => {
@@ -34,5 +34,20 @@ describe('isBlocked', () => {
   it('allows normal words', () => {
     expect(isBlocked('HOLA GIROTRÒNICA')).toBe(false);
     expect(isBlocked('COMPUTADORA')).toBe(false);
+  });
+});
+
+describe('sanitizeName', () => {
+  it('uppercases and cuts to 12 characters', () => {
+    expect(sanitizeName('  joan león del sud ')).toBe('JOAN LEÓN DE');
+  });
+
+  it('rejects offensive names', () => {
+    expect(sanitizeName('m3rda')).toBe('');
+  });
+
+  it('returns an empty string for empty input', () => {
+    expect(sanitizeName('')).toBe('');
+    expect(sanitizeName(null)).toBe('');
   });
 });

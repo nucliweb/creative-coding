@@ -5,7 +5,7 @@ import {
 } from 'firebase/database';
 import { CONFIG } from '../config.js';
 import { clampParam, defaultRings, RING_PARAMS } from '../shared/params.js';
-import { sanitizeMessage, isBlocked } from '../shared/sanitize.js';
+import { sanitizeMessage, isBlocked, sanitizeName } from '../shared/sanitize.js';
 
 let db = null;
 let connected = false;
@@ -75,6 +75,45 @@ export function joinAsPlayer(id, hue) {
     },
     leave() { remove(r).catch(() => {}); },
   };
+}
+
+// ---- arena avatars: phones send intent, the deck simulates
+export function watchAvatars(onChange) {
+  const d = getDb(); if (!d) return () => {};
+  const r = ref(d, 'avatars');
+  const put = (s) => onChange('put', s.key, s.val());
+  const offs = [onChildAdded(r, put), onChildChanged(r, put), onChildRemoved(r, (s) => onChange('remove', s.key))];
+  return () => offs.forEach((f) => f());
+}
+export function joinArena(id, profile) {
+  const d = getDb(); if (!d) return null;
+  const r = ref(d, `avatars/${id}`);
+  const state = { n: sanitizeName(profile.n) || 'ANÒNIM', h: profile.h, s: profile.s, jx: 0, jy: 0, d: 0 };
+  onDisconnect(r).remove();
+  onDisconnect(ref(d, `scores/${id}`)).remove();
+  set(r, state).catch((e) => console.warn('[fb] arena', e.message));
+  let timer = 0, dirty = {};
+  const flush = () => { timer = 0; const patch = dirty; dirty = {}; update(r, patch).catch(() => {}); };
+  const queue = (patch, now = false) => {
+    Object.assign(state, patch); Object.assign(dirty, patch);
+    if (now) { clearTimeout(timer); flush(); } else if (!timer) timer = setTimeout(flush, 80); // ~12 writes/s max
+  };
+  return {
+    profile(p) { queue({ ...(p.n !== undefined ? { n: sanitizeName(p.n) || 'ANÒNIM' } : {}), ...(p.h !== undefined ? { h: p.h } : {}), ...(p.s !== undefined ? { s: p.s } : {}) }, true); },
+    stick(jx, jy) { queue({ jx: Math.round(jx * 100) / 100, jy: Math.round(jy * 100) / 100 }); },
+    dash() { queue({ d: (state.d + 1) % 100000 }, true); },
+    leave() { clearTimeout(timer); remove(r).catch(() => {}); },
+  };
+}
+
+// ---- arena scores: the deck tells each phone its crashes and position
+export function publishScores(patch) {
+  const d = getDb(); if (!d || !Object.keys(patch).length) return;
+  update(ref(d, 'scores'), patch).catch((e) => console.warn('[fb] scores', e.message));
+}
+export function watchScore(id, cb) {
+  const d = getDb(); if (!d) return () => {};
+  return onValue(ref(d, `scores/${id}`), (s) => cb(s.val()));
 }
 
 // ---- messages

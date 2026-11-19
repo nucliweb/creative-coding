@@ -8,6 +8,7 @@ import { next, prev, goTo, parseHash, toHash } from './navigation.js';
 import { MatrixRain } from '../fx/matrixRain.js';
 import { drawQR } from '../fx/qr.js';
 import { media, hasWebGPU } from '../input/media.js';
+import { toggleMute } from '../fx/sfx.js';
 import * as fb from '../net/firebase.js';
 import { CONFIG, controlUrl } from '../config.js';
 import { nextTheme, stepTextScale } from '../shared/display.js';
@@ -76,10 +77,9 @@ async function show(nextState, { transition = true } = {}) {
     stageEl.classList.add('glitch-in');
     setTimeout(() => stageEl.classList.remove('glitch-in'), 300);
 
-    const bg = slide.bg !== false;
-    stageEl.classList.toggle('force-dark', !bg);
-    deck.classList.toggle('no-bg', !bg);
-    bg ? rain.start() : rain.stop();
+    stageEl.classList.toggle('force-dark', slide.bg === false);
+    deck.classList.toggle('no-bg', !slide.rain);
+    slide.rain ? rain.start() : rain.stop();
     if (slide.stage) fb.setStage(slide.stage);
 
     if (slide.demo) {
@@ -115,6 +115,7 @@ channel.onmessage = ({ data }) => {
   if (data.type === 'timer') { timerStart = data.timerStart; broadcast(); }
   if (data.type === 'theme') toggleTheme();
   if (data.type === 'text') scaleText(data.direction);
+  if (data.type === 'mute') mute();
 };
 
 const players = new Map();
@@ -146,10 +147,11 @@ const PREV = ['ArrowLeft', 'ArrowUp', 'PageUp'];
 addEventListener('keydown', (e) => {
   if (!booted || e.target.closest?.('input, select, textarea')) return;
   if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (!e.shiftKey && current.demo?.onKey?.(e)) { e.preventDefault(); return; } // demos first: a combo may claim t
   if (e.key === 't' || e.key === 'T') { toggleTheme(); return; }
   if (e.key === '>') { scaleText(1); return; }
   if (e.key === '<') { scaleText(-1); return; }
-  if (!e.shiftKey && current.demo?.onKey?.(e)) { e.preventDefault(); return; }
+  if (e.key === 'm' || e.key === 'M') { mute(); return; }
   if (NEXT.includes(e.key)) { e.preventDefault(); navigate('next'); return; }
   if (PREV.includes(e.key)) { e.preventDefault(); navigate('prev'); return; }
   if (e.key === 'Home') return navigate('goto', 0);
@@ -165,6 +167,8 @@ addEventListener('keydown', (e) => {
 });
 addEventListener('keyup', (e) => { if (e.key === 'q' || e.key === 'Q') media.fakeMic = false; });
 addEventListener('hashchange', () => { const s = parseHash(SLIDES, location.hash); if (s.index !== state.index || s.step !== state.step) show(s); });
+
+function mute() { toast(toggleMute() ? 'SO SILENCIAT' : 'SO ACTIU'); }
 
 function openPresenter() {
   window.open('presenter.html', 'cc-presenter', 'width=1280,height=800');

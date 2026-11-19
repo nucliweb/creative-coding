@@ -1,4 +1,4 @@
-import { CONFIG, RESOURCES } from '../config.js';
+import { CONFIG, RESOURCES, ALTERNATIVES } from '../config.js';
 import { codeBlock } from '../fx/highlight.js';
 import { INTRO_SHADER } from '../demos/shaderIntro.js';
 
@@ -11,6 +11,7 @@ export const SLIDES = [
     id: 'titol',
     title: 'Títol',
     minutes: 0.5,
+    rain: true, // the Matrix background lives only here and inside the messages demo
     stage: 'idle',
     html: () => `
       <div class="slide title-slide">
@@ -39,7 +40,7 @@ Tecles: m mirall · +/- resolució · c contrast`,
   {
     id: 'que-es',
     title: 'Què és el Creative Coding?',
-    minutes: 1.25,
+    minutes: 1,
     steps: 3,
     html: () => `
       <div class="slide">
@@ -60,7 +61,7 @@ Tecles: m mirall · +/- resolució · c contrast`,
   {
     id: 'origens',
     title: 'Orígens',
-    minutes: 1.75,
+    minutes: 1.5,
     steps: 3,
     html: () => `
       <div class="slide">
@@ -140,7 +141,7 @@ for (let j = 0; j < 22; j++) {
   {
     id: 'processing',
     title: 'Processing',
-    minutes: 0.75,
+    minutes: 0.5,
     html: () => `
       <div class="slide">
         <div class="split">
@@ -165,6 +166,30 @@ void draw() {
     notes: `- Un "sketchbook": no és un projecte, és un esbós. Prems Play i ho veus.
 - setup() un cop, draw() 60 vegades per segon. Aquest és tot el model mental.
 - Aquest codi és el "hola món" de milers d'artistes. Tecla x neteja.`,
+  },
+  {
+    id: 'processing-ide',
+    title: "L'entorn de Processing",
+    minutes: 0.5,
+    html: () => `
+      <div class="slide">
+        <div class="kicker">02 · processing · l'entorn</div>
+        <div class="screen-split">
+          <figure class="screen" style="--ar: 942 / 683">
+            <img src="screens/processing-ide.webp" alt="Processing IDE amb el sketch GirotronicaClap" onerror="this.closest('figure').classList.add('missing')">
+            <figcaption>PROCESSING IDE</figcaption>
+          </figure>
+          <ul class="stack bullets">
+            <li>▸ Un botó: <span class="c-green">▶ Play</span></li>
+            <li>▸ Sketchbook, exemples i llibreries</li>
+            <li>▸ Java per sota, sense cerimònia</li>
+            <li>▸ Exporta apps per a Mac, Windows i Linux</li>
+          </ul>
+        </div>
+      </div>`,
+    notes: `- Això és tot l'entorn: editor, Play i una finestra amb el resultat.
+- Exemples i llibreries des del menú: so, vídeo, càmera, física...
+- És Java, però sense classes ni main: només setup() i draw().`,
   },
   {
     id: 'processing-demo',
@@ -221,7 +246,7 @@ Tecles: r reinicia · w forçar victòria · +/- sensibilitat micro · mantén Q
   {
     id: 'p5',
     title: 'p5.js + QR',
-    minutes: 0.75,
+    minutes: 0.5,
     stage: 'rings',
     html: () => `
       <div class="slide">
@@ -250,9 +275,34 @@ function draw() {
 - Que escanegin el QR ara: les demos següents les controlen ells.`,
   },
   {
+    id: 'p5-editor',
+    title: "L'editor de p5.js",
+    minutes: 0.5,
+    stage: 'rings',
+    html: () => `
+      <div class="slide">
+        <div class="kicker">03 · p5.js · l'editor</div>
+        <div class="screen-split">
+          <figure class="screen">
+            <img src="screens/p5-editor.webp" alt="Editor web de p5.js amb un sketch en marxa" onerror="this.closest('figure').classList.add('missing')">
+            <figcaption>EDITOR.P5JS.ORG</figcaption>
+          </figure>
+          <ul class="stack bullets">
+            <li>▸ Res a instal·lar: <span class="c-cyan">editor.p5js.org</span></li>
+            <li>▸ Codi a l'esquerra, resultat a la dreta</li>
+            <li>▸ Comparteix el sketch amb una URL</li>
+            <li>▸ Milers de sketches a la comunitat</li>
+          </ul>
+        </div>
+      </div>`,
+    notes: `- Obriu editor.p5js.org al portàtil (o al mòbil!) i ja esteu programant.
+- Aquest codi és el mateix cercle de Processing, però al navegador.
+- Si teniu el mòbil a mà, el QR anterior us deixa a punt per a la demo següent.`,
+  },
+  {
     id: 'anells',
     title: 'Anells (control des del mòbil)',
-    minutes: 1.5,
+    minutes: 1.25,
     bg: false,
     stage: 'rings',
     html: () => `<div class="slide">${full}</div>`,
@@ -300,7 +350,7 @@ Tecles: w envia una paraula de prova (pla B)`,
   {
     id: 'glitch',
     title: 'Shader glitch (càmera)',
-    minutes: 1.75,
+    minutes: 1.5,
     bg: false,
     html: () => `<div class="slide">${full}</div>`,
     demo: () => import('../demos/glitchCam.js'),
@@ -336,27 +386,57 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
   {
     id: 'particules',
     title: 'Partícules WebGPU (un eixam per mòbil)',
-    minutes: 1.75,
+    minutes: 1.5,
     bg: false,
     stage: 'particles',
     html: () => `<div class="slide">${full}</div>`,
     demo: () => import('../demos/particles.js'),
-    notes: `- Cada mòbil és un atractor amb el seu color. Arrossegueu el dit per moure el vostre eixam.
+    notes: `- Cada mòbil té el seu eixam del seu color: busqueu-lo a la pantalla i moveu-lo amb el dit.
 - Sense mòbils hi ha 3 atractors fantasma. Amb el ratolí (clic i arrossega) en pots afegir un.
 - Feu soroll: el micro afegeix turbulència.
-Tecles: s remolí · f estela`,
+- Clímax: g → «TOTS AL CENTRE!». Com més gent dins, més fort el vòrtex; ple = portal + so de victòria (LLESTOS!). Compte enrere i x → explosió amb so.
+- Tornar a jugar: r → nova ronda (torna «TOTS AL CENTRE», el so de victòria es pot repetir).
+Tecles: g centre · x explosió · r nova ronda · s remolí · f estela`,
   },
   {
     id: 'final',
-    title: 'TOT JUNT',
+    title: 'Arena (Three.js): tots dins',
     minutes: 1.5,
     bg: false,
     stage: 'finale',
-    html: () => `<div class="slide">${full}</div>`,
-    demo: () => import('../demos/finale.js'),
-    notes: `- Tot a la vegada: càmera amb shader, partícules WebGPU, els vostres mòbils, les vostres paraules i el micro.
-- Demana: moveu els eixams, envieu paraules i, per acabar, el MÉS FORT possible.
-Tecles: l logo · p paleta · d datamosh · w paraula de prova`,
+    html: () => `<div class="slide"><div class="demo-host"></div></div>`,
+    demo: () => import('../demos/arena.js'),
+    notes: `- L'objectiu del Creative Coding sovint no és la imatge: és la interacció. Avui la peça sou vosaltres.
+- Escanegeu el QR: poseu-vos un nom, trieu color i velocitat, i moveu-vos amb el joystick.
+- DASH per envestir: cada xoc compta. El rànquing de dalt a la dreta diu qui en fa més.
+- El portàtil calcula la física (Three.js per pintar); els mòbils només envien el que premeu.
+- Easter egg: escriu g-t-a (a poc a poc, fins a 3 s entre lletres) → les lletres surten grans al centre i l'arena es tenyeix de posta de sol. Torna-ho a escriure per tornar al neó.
+- Tab → PAUSA amb el rànquing complet (empats comparteixen posició). Tab un altre cop per continuar.
+Tecles: Tab pausa + rànquing · b bots · p mode píxel · c càmera orbital · r reinicia xocs · gta posta de sol · m silencia el so`,
+  },
+  {
+    id: 'alternatives',
+    title: 'I molt més (alternatives)',
+    minutes: 0.75,
+    stage: 'idle',
+    html: () => `
+      <div class="slide">
+        <div class="kicker">i molt més</div>
+        <h2>No tot és Processing</h2>
+        <div class="alt-grid">
+          ${ALTERNATIVES.map((g) => `
+            <div class="alt-group">
+              <h3>${g.group}</h3>
+              <ul>${g.items.map((t) => `<li><a href="${t.url}" target="_blank" rel="noopener">${t.name}</a> <span class="muted">${t.tag}</span></li>`).join('')}</ul>
+            </div>`).join('')}
+        </div>
+        <p class="muted alt-more">I molts més a <a href="https://github.com/terkelg/awesome-creative-coding" target="_blank" rel="noopener">awesome-creative-coding</a></p>
+      </div>`,
+    notes: `- La idea és la mateixa a tot arreu: un bucle de dibuix, dades i una mica d'atzar.
+- C++ (openFrameworks, Cinder) per a instal·lacions; Rust i Python també hi són.
+- Nodes (TouchDesigner, vvvv, Max) sense escriure codi: molt usats en espectacles i museus.
+- També es programa música en directe: Sonic Pi, TidalCycles...
+- Tot surt de la llista awesome-creative-coding, que és als recursos.`,
   },
   {
     id: 'gracies',

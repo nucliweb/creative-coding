@@ -16,6 +16,10 @@ export const PLAYER_LIMITS = { hueMax: 360 };
 
 export const MESSAGE_MAX = 20;
 
+export const AVATAR_LIMITS = { nameMax: 12, speedMin: 1, speedMax: 5, dashMax: 100000 };
+
+export const SCORE_LIMITS = { hitsMax: 100000, playersMax: 1000 };
+
 export function clampParam(key, value) {
   const p = RING_PARAMS[key];
   const n = typeof value === 'number' ? value : Number.NaN;

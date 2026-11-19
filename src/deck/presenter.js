@@ -26,6 +26,7 @@ addEventListener('keydown', (e) => {
   if (e.key === 't' || e.key === 'T') ch.postMessage({ type: 'theme' });
   if (e.key === '>') ch.postMessage({ type: 'text', direction: 1 });
   if (e.key === '<') ch.postMessage({ type: 'text', direction: -1 });
+  if (e.key === 'm' || e.key === 'M') ch.postMessage({ type: 'mute' });
 });
 
 function toggleTimer() {

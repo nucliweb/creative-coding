@@ -234,6 +234,36 @@ pre.code {
 .hud.tr { top: 3vh; right: 2.5vw; text-align: right; }
 .hud.bl { bottom: 3vh; left: 2.5vw; }
 .hud.br { bottom: 3vh; right: 2.5vw; text-align: right; }
+
+/* Arena pause: full crash ranking over a dimmed, frozen game */
+.ranking { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; background: rgb(0 0 0 / 0.62); opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.ranking.on { opacity: 1; }
+.ranking-box { min-width: min(92vw, 820px); padding: 3vh 4vw; border: 2px solid var(--green); background: rgb(2 6 4 / 0.9); box-shadow: 0 0 40px rgb(0 255 106 / 0.25); font-family: var(--font-pixel); }
+.ranking-title { margin: 0; text-align: center; color: var(--yellow, #ffe600); font-size: clamp(28px, 4.5vw, 72px); }
+.ranking-sub { margin: 1.2vh 0 2.4vh; text-align: center; color: var(--magenta, #ff2bd6); font-size: clamp(12px, 1.4vw, 22px); }
+.ranking ol { list-style: none; margin: 0; padding: 0; }
+.ranking li { display: grid; grid-template-columns: 3.2em 1fr auto; align-items: baseline; gap: 1em; padding: 0.55vh 0; font-size: clamp(13px, 1.7vw, 28px); color: #cfe; }
+.ranking li .hits { color: #fff; }
+.ranking li.top { font-size: clamp(16px, 2.3vw, 38px); }
+.ranking li.top1 .pos { color: #ffd700; } .ranking li.top2 .pos { color: #d8d8d8; } .ranking li.top3 .pos { color: #e08a4a; }
+.ranking-hint { margin: 2.4vh 0 0; text-align: center; color: #6a8; font-size: clamp(10px, 1vw, 16px); animation: blink 1.2s steps(1) infinite; }
+
+/* Cheat-code banner typed live on stage (Arena "GTA"): big, centred, sunset gradient */
+.combo { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 5; opacity: 0; transition: opacity 0.25s; }
+.combo.on { opacity: 1; }
+.combo span {
+  font-family: var(--font-pixel); font-size: clamp(64px, 15vw, 280px); letter-spacing: 0.06em; line-height: 1;
+  background: linear-gradient(180deg, #ffe08a 0%, #ff9a3d 40%, #ff2e88 72%, #b84dff 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 0.12em rgb(255 46 136 / 0.8)) drop-shadow(0.05em 0.05em 0 #2a0a3d);
+}
+.combo.done span { animation: combo-pop 1.8s ease-out forwards; }
+@keyframes combo-pop {
+  0% { transform: scale(0.6); }
+  14% { transform: scale(1.18); }
+  28% { transform: scale(1); }
+  100% { transform: scale(1.04); }
+}
 .hud .big-hud { font-size: calc(var(--fs) * clamp(20px, 2.8vw, 54px)); display: block; margin-top: 0.4em; }
 
 .qr-box { display: inline-flex; flex-direction: column; align-items: center; gap: 1vh; }
@@ -354,5 +384,26 @@ body.blackout #blackout { display: block; }
   color: var(--fg);
 }
 :root[data-theme='light'] #stage.force-dark { background: #000; }
-.resources { list-style: none; gap: 1.6vh; }
-.resources li { font-size: calc(var(--fs) * clamp(18px, 2.2vw, 44px)); }
+.resources { list-style: none; gap: calc(1.4vh / var(--fs) / var(--fs)); }
+.resources li { font-size: calc(var(--fs) * clamp(16px, 1.95vw, 40px)); line-height: 1.05; }
+
+/* ---------- screenshot slides ---------- */
+
+.screen-split { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 3vw; align-items: center; flex: 1 1 auto; min-height: 0; }
+.screen { position: relative; margin: 0; justify-self: start; width: min(100%, calc(68vh * var(--ar, 16 / 9))); border: 2px solid var(--green); box-shadow: 0 0 calc(24px * var(--glow)) rgb(0 255 106 / calc(0.3 * var(--glow))), 0 10px 30px rgb(0 0 0 / 0.25); } /* as big as the column allows without passing 68vh tall; --ar = the screenshot's width / height */
+.screen img { display: block; width: 100%; height: auto; }
+.screen figcaption { position: absolute; left: -2px; bottom: -2px; transform: translateY(100%); font-family: var(--font-pixel); font-size: calc(var(--fs) * clamp(10px, 1vw, 18px)); background: var(--green); color: var(--bg); padding: 0.4em 0.7em; }
+.screen.missing { width: 100%; aspect-ratio: 16 / 9; background: var(--panel); display: grid; place-items: center; }
+.screen.missing img { display: none; }
+.screen.missing figcaption { position: static; transform: none; }
+.bullets { list-style: none; }
+.bullets li { font-size: calc(var(--fs) * clamp(18px, 2.2vw, 44px)); }
+
+/* ---------- alternatives ---------- */
+
+.alt-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2vw; }
+.alt-group h3 { font-size: calc(var(--fs) * clamp(14px, 1.6vw, 30px)); color: var(--magenta); margin-bottom: 1.4vh; }
+.alt-group ul { list-style: none; display: flex; flex-direction: column; gap: calc(1.2vh / var(--fs)); }
+.alt-group li { font-size: calc(var(--fs) * clamp(16px, 1.9vw, 38px)); line-height: 1.1; }
+.alt-group li .muted { display: block; font-size: 0.7em; }
+.alt-more { font-size: calc(var(--fs) * clamp(16px, 1.8vw, 34px)); }

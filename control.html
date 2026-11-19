@@ -15,6 +15,7 @@
     <button data-mode="rings">ANELLS</button>
     <button data-mode="messages">MISSATGE</button>
     <button data-mode="particles">EIXAM</button>
+    <button data-mode="arena">ARENA</button>
   </nav>
   <main>
     <section data-view="idle">
@@ -30,8 +31,24 @@
         <p id="msg-status" class="muted"></p>
       </form>
     </section>
+    <section data-view="arena">
+      <div class="arena-profile">
+        <input id="arena-name" maxlength="12" placeholder="EL TEU NOM" autocomplete="off" enterkeyhint="done">
+        <div id="swatches"></div>
+        <div class="slider"><label>Velocitat<span id="arena-speed-v">2</span></label>
+          <input id="arena-speed" type="range" min="1" max="5" step="0.5" value="2"></div>
+      </div>
+      <div id="arena-score" class="arena-score" hidden>
+        <div><span>ELS TEUS XOCS</span><b id="score-hits">0</b></div>
+        <div><span>POSICIÓ</span><b id="score-rank">–</b><small id="score-of"></small></div>
+      </div>
+      <div class="arena-controls">
+        <div id="stick"><span id="knob"></span></div>
+        <button id="dash" type="button">DASH</button>
+      </div>
+    </section>
     <section data-view="particles">
-      <p class="muted">Arrossega el dit: mous el teu eixam.</p>
+      <p class="muted swarm-hint"><i></i>Aquest és el teu color. Arrossega el dit: el teu eixam et seguirà.</p>
       <div id="pad"><span id="me"></span></div>
     </section>
   </main>

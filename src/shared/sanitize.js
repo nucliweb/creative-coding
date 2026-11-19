@@ -1,4 +1,4 @@
-import { MESSAGE_MAX } from './params.js';
+import { MESSAGE_MAX, AVATAR_LIMITS } from './params.js';
 
 // Short blocklist (ca/es/en). It only needs to stop the obvious on a projector.
 const BLOCKED = [
@@ -37,4 +37,10 @@ export function isBlocked(text) {
     if (w.includes(' ')) return joined.includes(w);
     return words.some((t) => t.startsWith(w) && t.length <= w.length + 2);
   });
+}
+
+// Arena nicknames: same cleanup as messages, shorter, and blocked words become empty (caller shows a default).
+export function sanitizeName(raw) {
+  const clean = sanitizeMessage(raw).slice(0, AVATAR_LIMITS.nameMax).trim();
+  return clean && !isBlocked(clean) ? clean : '';
 }

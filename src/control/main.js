@@ -4,7 +4,7 @@ import '../styles/theme.css';
 import './control.css';
 import * as fb from '../net/firebase.js';
 import { RING_PARAMS, clampParam } from '../shared/params.js';
-import { sanitizeMessage, isBlocked } from '../shared/sanitize.js';
+import { sanitizeMessage, isBlocked, sanitizeName } from '../shared/sanitize.js';
 
 const $ = (s) => document.querySelector(s);
 fb.getDb();
@@ -12,16 +12,17 @@ fb.onConnection((c) => $('#conn').classList.toggle('on', c));
 
 // ---------------------------------------------------------------- modes
 let live = 'idle', manual = null;
-const VIEWS = { idle: 'idle', rings: 'rings', messages: 'messages', particles: 'particles', finale: 'particles' };
+const VIEWS = { idle: 'idle', rings: 'rings', messages: 'messages', particles: 'particles', finale: 'arena', arena: 'arena' };
 
 function setView(mode) {
   const v = VIEWS[mode] || 'idle';
-  document.querySelectorAll('section').forEach((s) => s.classList.toggle('on', s.dataset.view === v || (mode === 'finale' && s.dataset.view === 'messages')));
+  document.querySelectorAll('section').forEach((s) => s.classList.toggle('on', s.dataset.view === v));
   document.querySelectorAll('#tabs button').forEach((b) => {
     b.classList.toggle('on', b.dataset.mode === (manual || mode));
-    b.classList.toggle('live', b.dataset.mode === live || (live === 'finale' && b.dataset.mode !== 'rings'));
+    b.classList.toggle('live', b.dataset.mode === live || (live === 'finale' && b.dataset.mode === 'arena'));
   });
   if (v === 'particles') joinSwarm(); else leaveSwarm();
+  if (v === 'arena') joinArenaNow(); else leaveArena();
 }
 fb.onStage((s) => { live = s; manual = null; setView(s); });
 $('#tabs').onclick = (e) => { const b = e.target.closest('button'); if (b) { manual = b.dataset.mode; setView(manual); } };
@@ -79,8 +80,7 @@ const id = (() => {
 })();
 const hue = (() => { try { return Number(sessionStorage.cc_hue || (sessionStorage.cc_hue = String(Math.floor(Math.random() * 360)))); } catch { return Math.floor(Math.random() * 360); } })();
 const me = $('#me');
-me.style.borderColor = `hsl(${hue} 100% 60%)`;
-me.style.boxShadow = `0 0 14px hsl(${hue} 100% 60%)`;
+$('section[data-view="particles"]').style.setProperty('--me', hue); // the pad wears your swarm's colour
 let player = null, pos = { x: 0.5, y: 0.5 };
 
 function joinSwarm() {
@@ -101,6 +101,75 @@ function onPad(e) {
 }
 pad.addEventListener('pointerdown', (e) => { pad.setPointerCapture(e.pointerId); onPad(e); });
 pad.addEventListener('pointermove', (e) => { if (e.buttons || e.pointerType === 'touch') onPad(e); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) leaveSwarm(); else if (['particles', 'finale'].includes(manual || live)) joinSwarm(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { leaveSwarm(); leaveArena(); return; }
+  const v = VIEWS[manual || live];
+  if (v === 'particles') joinSwarm();
+  if (v === 'arena') joinArenaNow();
+});
+
+// ---------------------------------------------------------------- arena: name, colour, speed, joystick, dash
+const HUES = [150, 185, 210, 270, 310, 340, 25, 55];
+const saved = (k, d) => { try { return sessionStorage.getItem(k) ?? d; } catch { return d; } };
+const keep = (k, v) => { try { sessionStorage.setItem(k, v); } catch { /* private mode */ } };
+const profile = { n: saved('cc_name', ''), h: Number(saved('cc_arena_hue', HUES[Math.floor(Math.random() * HUES.length)])), s: Number(saved('cc_speed', 2)) };
+let arena = null;
+
+const nameInput = $('#arena-name');
+nameInput.value = profile.n;
+const swatches = $('#swatches');
+swatches.innerHTML = HUES.map((h) => `<button type="button" data-h="${h}" aria-label="Color ${h}" style="background:hsl(${h} 100% 55%)"></button>`).join('');
+const markSwatch = () => swatches.querySelectorAll('button').forEach((b) => b.classList.toggle('on', Number(b.dataset.h) === profile.h));
+markSwatch();
+const speedInput = $('#arena-speed');
+speedInput.value = profile.s; $('#arena-speed-v').textContent = profile.s;
+
+function joinArenaNow() {
+  if (arena) return;
+  arena = fb.joinArena(id, { n: profile.n, h: profile.h, s: profile.s });
+  unwatchScore = fb.watchScore(id, showScore);
+}
+function leaveArena() { arena?.leave(); arena = null; unwatchScore(); unwatchScore = () => {}; }
+
+// The deck sends back this phone's crashes and position: celebrate every new crash.
+let unwatchScore = () => {}, lastHits = 0;
+const scoreBox = $('#arena-score'), hitsEl = $('#score-hits'), rankEl = $('#score-rank'), ofEl = $('#score-of');
+function showScore(s) {
+  if (!s) { scoreBox.hidden = true; lastHits = 0; return; }
+  scoreBox.hidden = false;
+  hitsEl.textContent = s.h; rankEl.textContent = `#${s.r}`; ofEl.textContent = `/ ${s.n}`;
+  rankEl.classList.toggle('lead', s.r === 1 && s.h > 0);
+  if (s.h > lastHits) {
+    hitsEl.classList.remove('bump'); void hitsEl.offsetWidth; hitsEl.classList.add('bump');
+    navigator.vibrate?.(40);
+  }
+  lastHits = s.h;
+}
+
+const commitName = () => { profile.n = sanitizeName(nameInput.value); nameInput.value = profile.n; keep('cc_name', profile.n); arena?.profile({ n: profile.n }); };
+nameInput.addEventListener('change', commitName);
+nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { nameInput.blur(); commitName(); } });
+swatches.addEventListener('click', (e) => {
+  const h = Number(e.target.dataset?.h); if (!Number.isFinite(h)) return;
+  profile.h = h; keep('cc_arena_hue', h); markSwatch(); arena?.profile({ h });
+});
+speedInput.addEventListener('input', () => {
+  profile.s = Number(speedInput.value); keep('cc_speed', profile.s); $('#arena-speed-v').textContent = profile.s; arena?.profile({ s: profile.s });
+});
+
+const stick = $('#stick'), knob = $('#knob');
+function onStick(e) {
+  const r = stick.getBoundingClientRect();
+  let x = (e.clientX - (r.left + r.width / 2)) / (r.width / 2), y = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+  const len = Math.hypot(x, y); if (len > 1) { x /= len; y /= len; }
+  knob.style.left = `${50 + x * 50}%`; knob.style.top = `${50 + y * 50}%`;
+  joinArenaNow(); arena.stick(x, y);
+}
+function releaseStick() { knob.style.left = '50%'; knob.style.top = '50%'; arena?.stick(0, 0); }
+stick.addEventListener('pointerdown', (e) => { stick.setPointerCapture(e.pointerId); onStick(e); });
+stick.addEventListener('pointermove', (e) => { if (e.buttons || e.pointerType === 'touch') onStick(e); });
+stick.addEventListener('pointerup', releaseStick);
+stick.addEventListener('pointercancel', releaseStick);
+$('#dash').addEventListener('click', () => { joinArenaNow(); arena.dash(); navigator.vibrate?.(30); });
 
 setView('idle');
