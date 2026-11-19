@@ -51,6 +51,33 @@ export function drawMarkers(g, list, w, h) {
   }
 }
 
+// Text on a dark plate with a coloured border: readable over any particle cloud, however bright.
+function plate(g, text, x, y, size, color) {
+  g.font = `${size}px "Press Start 2P", monospace`;
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  const w = g.measureText(text).width + size * 1.4, h = size * 2;
+  g.shadowBlur = 0;
+  g.fillStyle = 'rgb(2 6 4 / 0.85)';
+  g.fillRect(x - w / 2, y - h / 2, w, h);
+  g.lineWidth = Math.max(2, size * 0.12); g.strokeStyle = color;
+  g.strokeRect(x - w / 2, y - h / 2, w, h);
+  g.fillStyle = color; g.shadowColor = color; g.shadowBlur = size * 0.6;
+  g.fillText(text, x, y + size * 0.06);
+  g.shadowBlur = 0;
+}
+
+// A ring stroke with a wide dark outline underneath, so it stays visible on light particles.
+function outlinedArc(g, cx, cy, r, from, to, width, color, dash) {
+  g.setLineDash([]);
+  g.lineWidth = width * 2.6; g.strokeStyle = 'rgb(2 6 4 / 0.7)'; g.shadowBlur = 0;
+  g.beginPath(); g.arc(cx, cy, r, from, to); g.stroke();
+  if (dash) g.setLineDash(dash.pattern);
+  g.lineDashOffset = dash?.offset ?? 0;
+  g.lineWidth = width; g.strokeStyle = color;
+  g.beginPath(); g.arc(cx, cy, r, from, to); g.stroke();
+  g.setLineDash([]);
+}
+
 // "Tots al centre": progress ring around the target. As the core charges, the particle vortex
 // takes over: the ring fades out and the labels move to the top and bottom of the screen.
 export function drawGathering(g, w, h, { inside, total }, radius, time, charge, ready) {
@@ -58,28 +85,18 @@ export function drawGathering(g, w, h, { inside, total }, radius, time, charge, 
   const ratio = total ? inside / total : 0;
   const color = ready ? '#ffe600' : '#00ff6a';
   const ring = 1 - Math.min(1, charge * 1.4);
+  const thin = Math.max(2, h * 0.004), thick = Math.max(4, h * 0.01);
   g.save();
   if (ring > 0) {
     g.globalAlpha = ring;
-    g.lineWidth = Math.max(2, h * 0.004);
-    g.setLineDash([h * 0.012, h * 0.012]);
-    g.lineDashOffset = -time * h * 0.02;
-    g.strokeStyle = 'rgb(255 255 255 / 0.35)';
-    g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.stroke();
-    g.setLineDash([]);
-    g.lineWidth = Math.max(4, h * 0.01);
-    g.strokeStyle = color; g.shadowColor = color; g.shadowBlur = h * 0.02;
-    g.beginPath(); g.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + ratio * Math.PI * 2); g.stroke();
+    outlinedArc(g, cx, cy, r, 0, Math.PI * 2, thin, 'rgb(255 255 255 / 0.85)', { pattern: [h * 0.012, h * 0.012], offset: -time * h * 0.02 });
+    if (ratio > 0) outlinedArc(g, cx, cy, r, -Math.PI / 2, -Math.PI / 2 + ratio * Math.PI * 2, thick, color);
     g.globalAlpha = 1;
   }
-  const top = cy - r - h * 0.03 + (h * 0.1 - (cy - r - h * 0.03)) * (1 - ring);
-  const bottom = cy + r + h * 0.06 + (h * 0.94 - (cy + r + h * 0.06)) * (1 - ring);
-  g.shadowColor = color; g.shadowBlur = h * 0.02;
-  g.fillStyle = color; g.textAlign = 'center';
-  g.font = `${Math.round(h * (ready ? 0.045 : 0.028))}px "Press Start 2P", monospace`;
-  g.fillText(ready ? 'LLESTOS!' : 'TOTS AL CENTRE', cx, top);
-  g.font = `${Math.round(h * 0.028)}px "Press Start 2P", monospace`;
-  g.fillText(`${inside} / ${total}`, cx, bottom);
+  const top = cy - r - h * 0.06 + (h * 0.1 - (cy - r - h * 0.06)) * (1 - ring);
+  const bottom = cy + r + h * 0.06 + (h * 0.92 - (cy + r + h * 0.06)) * (1 - ring);
+  plate(g, ready ? 'LLESTOS!' : 'TOTS AL CENTRE', cx, top, Math.round(h * (ready ? 0.045 : 0.03)), color);
+  plate(g, `${inside} / ${total}`, cx, bottom, Math.round(h * 0.03), color);
   g.restore();
 }
 
